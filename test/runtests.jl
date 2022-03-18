@@ -2,19 +2,34 @@ using RobustMean
 using Test
 
 @testset "RobustMean.jl" begin
-    using Distribution
-
-    n = 40
+    using Distributions
+    using StatsBase, Statistics, Random
+    
+    n = 3 * 7 * 8
     M = 10^6
-    b = 3.0001
+    b = 2.0001
     dist = Pareto(b)
     μ = mean(dist)
     σ = std(dist)
     x = rand(dist, M, n)
 
-    
-    @test isapprox(β, probs(mix_mle)[1]; rtol = rtol)
-    @test isapprox(θ₁, p[1]...; rtol = rtol)
-    @test isapprox(α, p[2][1]; rtol = rtol)
-    @test isapprox(θ₂, p[2][2]; rtol = rtol)
+    δ = 3exp(-8)
+    p = 1 # for Minsker Ndaoud
+    estimator = [EmpiricalMean(), δMoM(δ), δTrimmedMean(δ), δCatoni(δ, σ), δHuber(δ, σ), δLeeValiant(δ), δMinskerNdaoud(δ, p)]
+
+    μ̂ = zeros(M, length(estimator))
+    for (i, es) in enumerate(estimator)
+        for m in 1:M
+            μ̂[m, i] = mean(x[m, :], es)
+        end
+    end
+
+    for (i, es) in enumerate(estimator)
+        if typeof(es) == MinskerNdaoud
+            continue # constant in the bound not explciit.
+        else
+            @test quantile(μ̂[:, i], 1 - δ) < σ * bound(n, δ, es)
+        end
+    end
+
 end
