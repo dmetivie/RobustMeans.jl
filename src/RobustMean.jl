@@ -6,9 +6,11 @@ Simple package implementing some Robust mean estimator.
 module RobustMean
 
 using Statistics
+using StatsBase: harmmean
 using Roots
 
 import Statistics: mean
+
 # Write your package code here.
 
 
