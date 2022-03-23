@@ -3,6 +3,10 @@ uuid = "1f212c10-5119-456f-85ee-3680502e4796"
 authors = ["David Métivier <46794064+dmetivie@users.noreply.github.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+Roots = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+
 [compat]
 julia = "1"
 

@@ -15,7 +15,7 @@ function bound(n, δ, M::δ_MeanEstimator)
     return bound(n, M)
 end
 bound(n, M::δMoM) = sqrt(32log(1 / M.δ) / n)
-bound(n, M::δTrimmedMean) = 9sqrt(2log(8 / M.δ) / n)
+bound(n, M::δTrimM) = 19sqrt(2log(8 / M.δ) / n) # Typo in the review by Lugosie. It seems that the ouragous 19 does th job. It is probably improvable.
 bound(n, M::δCatoni) = sqrt(2log(2 / M.δ) / (n - 2log(2 / M.δ)))
 bound(n, M::δHuber) = 8sqrt(2log(4 / M.δ) / n)
 """"

@@ -3,8 +3,8 @@ using Test
 
 @testset "RobustMean.jl" begin
     using Distributions
-    using StatsBase, Statistics, Random
-    
+    using Statistics, Random
+    Random.seed!(3)
     n = 3 * 7 * 8
     M = 10^6
     b = 2.0001
@@ -15,7 +15,7 @@ using Test
 
     δ = 3exp(-8)
     p = 1 # for Minsker Ndaoud
-    estimator = [EmpiricalMean(), δMoM(δ), δTrimmedMean(δ), δCatoni(δ, σ), δHuber(δ, σ), δLeeValiant(δ), δMinskerNdaoud(δ, p)]
+    estimator = [EmpiricalMean(), δMoM(δ), δTrimM(δ), δCatoni(δ, σ), δHuber(δ, σ), δLeeValiant(δ), δMinskerNdaoud(δ, p)]
 
     μ̂ = zeros(M, length(estimator))
     for (i, es) in enumerate(estimator)
@@ -25,7 +25,7 @@ using Test
     end
 
     for (i, es) in enumerate(estimator)
-        if typeof(es) == MinskerNdaoud
+        if typeof(es) == δMinskerNdaoud
             continue # constant in the bound not explciit.
         else
             @test quantile(μ̂[:, i], 1 - δ) < σ * bound(n, δ, es)

@@ -10,7 +10,7 @@ end
 
 """
 function mean(A::AbstractArray, MeanEstimator::δMoM)
-    k = k_mom(δMoM.δ)
+    k = k_mom(MeanEstimator.δ)
     return mean(A, MoM(k))
 end
 
@@ -20,7 +20,7 @@ end
 """
 function TrimmedMean(z, ε)
     n2 = length(z)
-    @assert ϵ < 1 "ϵ > 1: you cannot remove more"
+    @assert ε < 1 "ε > 1: you cannot remove more"
     @assert iseven(n2)
     n = n2 ÷ 2
     y = z[1:n]
@@ -30,9 +30,9 @@ function TrimmedMean(z, ε)
     i_max = n - floor(Int, ε * n)
     α = y[i_min]
     β = y[i_max]
-    return Trimmed_mean(x, α, β)
+    return TrimmedMean(x, α, β)
 end
-ϵ_trimmed(δ, n) = 32log(8 / δ) / (3n)
+ε_trimmed(δ, n) = 32log(8 / δ) / (3n)
 
 """
      mean(A::AbstractArray, MeanEstimator::δTrimmedMean)
@@ -41,9 +41,9 @@ end
 struct δTrimM{T} <: δ_MeanEstimator
     δ::T
 end
-function mean(A::AbstractArray, MeanEstimator::δTrimmedMean)
-    ϵ = ϵ_trimmed(δ, length(A))
-    return Trimmed_mean(z, ϵ)
+function mean(A::AbstractArray, MeanEstimator::δTrimM)
+    ε = ε_trimmed(MeanEstimator.δ, length(A))
+    return TrimmedMean(A, ε)
 end
 
 struct δCatoni{T,F} <: δ_MeanEstimator
@@ -57,9 +57,10 @@ end
 Reference: Catoni 
 """
 function mean(A::AbstractArray, MeanEstimator::δCatoni, kwargs...)
-    α = α_Catoni(δCatoni.δ, n, δCatoni.σ)
+    n = length(A)
+    α = α_Catoni(MeanEstimator.δ, n, MeanEstimator.σ)
     z = Z_Estimator(α, ψ_Catoni)
-    mean(A, z; kwargs...)
+    return mean(A, z; kwargs...)
 end
 
 struct δHuber{T,F} <: δ_MeanEstimator
@@ -73,11 +74,11 @@ end
 Reference: Huber 
 """
 function mean(A::AbstractArray, MeanEstimator::δHuber, kwargs...)
-    α = α_Huber(δHuber.δ, n, δHuber.σ)
+    n = length(A)
+    α = α_Huber(MeanEstimator.δ, n, MeanEstimator.σ)
     z = Z_Estimator(α, ψ_Huber)
     mean(A, z; kwargs...)
 end
-
 
 """
     LeeValiant(x, δ; α₀ = 0.0) 
@@ -100,7 +101,7 @@ end
 Reference: Optimal Sub-Gaussian Mean Estimation in R by Lee et Valiant 
 """
 function mean(A::AbstractArray, MeanEstimator::δLeeValiant; kwargs...)
-    return LeeValiant(A, δLeeValiant.δ; kwargs...)
+    return LeeValiant(A, MeanEstimator.δ; kwargs...)
 end
 
 """
@@ -128,6 +129,6 @@ end
 Reference: Robust and efficient mean estimation: an approach based on the properties of self-normalized sums
 """
 function mean(A::AbstractArray, MeanEstimator::δMinskerNdaoud; kwargs...)
-    k = k_mn(δMinskerNdaoud.δ)
-    return MinskerNdaoud(A, k, δMinskerNdaoud.p; kwargs...)
+    k = k_mn(MeanEstimator.δ)
+    return MinskerNdaoud(A, k, MeanEstimator.p; kwargs...)
 end
