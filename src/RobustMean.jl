@@ -17,11 +17,14 @@ import Statistics: mean
 abstract type MeanEstimator end
 
 include("means.jl")
-include("delta_mean.jl")
+include("mean_delta.jl")
+# include("delta_mean.jl")
 include("bounds.jl")
 
-export EmpiricalMean, MoM, TrimM, Z_Estimator
-export δMoM, δTrimM, δCatoni, δHuber, δLeeValiant, δMinskerNdaoud
+export EmpiricalMean
+export MedianOfMean, TrimmedMean
+export Z_Estimator, Catoni, Huber
+export LeeValiant, MinskerNdaoud
 export bound
 end
 
