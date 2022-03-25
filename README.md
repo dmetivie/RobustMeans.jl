@@ -11,7 +11,7 @@ Robust mean estimators are mean estimator that are ``robust`` (in some sense) ag
 
 ## Example
 
-```@example basic_usage
+```julia
 using Distributions
 using RobustMeans
 ```
