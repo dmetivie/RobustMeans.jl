@@ -12,13 +12,14 @@ using Roots
 import Statistics: mean
 
 abstract type MeanEstimator end
+abstract type RobustMean <: MeanEstimator end
 
 include("means.jl")
 include("mean_delta.jl")
 # include("delta_mean.jl")
 include("bounds.jl")
 
-export MeanEstimator
+export MeanEstimator, RobustMean
 export EmpiricalMean
 export MedianOfMean, TrimmedMean
 export Z_Estimator, Catoni, Huber

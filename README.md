@@ -28,7 +28,7 @@ distribution = Pareto(α)
 x = rand(distribution, M, n) # M realization of samples of size n
 ```
 
-### Inference
+### Estimate the mean with different estimators
 
 ```julia
 # Store all the realizations into a Dictionary
