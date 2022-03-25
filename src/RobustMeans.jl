@@ -1,18 +1,15 @@
 """
-    RobustMean
+    RobustMeans
 
 Simple package implementing some Robust mean estimator.
 """
-module RobustMean
+module RobustMeans
 
 using Statistics
 using StatsBase: harmmean
 using Roots
 
 import Statistics: mean
-
-# Write your package code here.
-
 
 abstract type MeanEstimator end
 
@@ -26,5 +23,6 @@ export MedianOfMean, TrimmedMean
 export Z_Estimator, Catoni, Huber
 export LeeValiant, MinskerNdaoud
 export bound
+
 end
 

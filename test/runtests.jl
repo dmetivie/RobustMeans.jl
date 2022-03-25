@@ -1,4 +1,4 @@
-using RobustMean
+using RobustMeans
 using Test
 
 @testset "RobustMean.jl" begin
