@@ -19,7 +19,7 @@ function MoM(x::AbstractArray, k::Integer)
     m = n ÷ k
     return median(mean(@view(x[(1+(l-1)*m):(l*m)])) for l = 1:k)
 end
-struct MedianOfMean{T<:Integer} <: MeanEstimator
+struct MedianOfMean{T<:Integer} <: RobustMean
     k::T # number of blocks
 end
 """
@@ -31,7 +31,7 @@ function mean(A::AbstractArray, Estimator::MedianOfMean)
     return MoM(A, Estimator.k)
 end
 
-struct TrimmedMean{T<:Integer} <: MeanEstimator
+struct TrimmedMean{T<:Integer} <: RobustMean
     α::T # 
     β::T
 end

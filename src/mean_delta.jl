@@ -46,7 +46,7 @@ function mean(A::AbstractArray, δ::Real, Estimator::TrimmedMean)
     return TrimMean(A, ε)
 end
 
-struct Catoni{F} <: MeanEstimator
+struct Catoni{F} <: RobustMean
     σ::F
 end
 α_Catoni(δ, n, σ) = sqrt((2log(2 / δ)) / (n * (1 + (2log(2 / δ)) / (n - 2log(2 / δ))))) / σ
@@ -62,7 +62,7 @@ function mean(A::AbstractArray, δ::Real, Estimator::Catoni, kwargs...)
     return mean(A, z; kwargs...)
 end
 
-struct Huber{F} <: MeanEstimator
+struct Huber{F} <: RobustMean
     σ::F
 end
 α_Huber(δ, n, σ) = sqrt(2log(4 / δ) / n) / σ #sqrt(2 * (log(2 / δ) - log(1 - exp(-n / 2) / δ)) / n) / σ
@@ -89,7 +89,7 @@ function LeeVal(x, δ; α₀=0.0)
     α = find_zero(f, α₀)
     return κ + mean((x[i] - κ) * (1 - min(α * (x[i] - κ)^2, 1)) for i in eachindex(x))
 end
-struct LeeValiant <: MeanEstimator end
+struct LeeValiant <: RobustMean end
 
 """
     mean(A::AbstractArray, Estimator::δLeeValiant; kwargs...)
@@ -114,7 +114,7 @@ function MinNda(x, k, p)
     return mean(μ̄ ./ σ̂p) * harmmean(σ̂p)
 end
 k_mn(δ) = ceil(Int, -log(δ / 3))
-struct MinskerNdaoud{T} <: MeanEstimator
+struct MinskerNdaoud{T} <: RobustMean
     p::T
 end
 
