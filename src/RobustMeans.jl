@@ -6,7 +6,7 @@ Simple package implementing some Robust mean estimator.
 module RobustMeans
 
 using Statistics
-using StatsBase: harmmean
+using StatsBase
 using Roots
 
 import Statistics: mean
@@ -22,9 +22,26 @@ include("bounds.jl")
 export MeanEstimator, RobustMean
 export EmpiricalMean
 export MedianOfMean, TrimmedMean
-export Z_Estimator, Catoni, Huber
+export Z_Estimator, Catoni, Huber, ψ_Huber, ψ_Catoni
 export LeeValiant, MinskerNdaoud
 export bound
+export mean
+
+include("smoothingkernel.jl")
+include("rollingmean.jl")
+include("means_weighted.jl")
+include("robustnonparamregression.jl")
+export SmoothingKernel,
+    uniform,
+    triangular,
+    gaussian,
+    epanechnikov,
+    biweight,
+    triweight,
+    tricube,
+    cosine,
+    logistic,
+    r̂ₙMOM, r̂ₙ
 
 end
 

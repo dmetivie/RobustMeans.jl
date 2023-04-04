@@ -3,6 +3,8 @@
 This package aim is to implement in Julia some (one-dimensional for now) robust mean estimators.
 See [Mean Estimation and Regression Under Heavy-Tailed Distributions: A Survey](https://arxiv.org/pdf/1906.04280.pdf) for a recent but but not up to date since the field is very active) survey.
 
+**I am currently trying some stuff on the package**
+
 ## What is it about?
 
 Computing the empirical mean over a data set is one of the most common operations in data analysis.
@@ -74,4 +76,5 @@ begin
     yticks!(10.0 .^ (-7:-0))
 end
 ```
+
 ![robust_n_56_alpha_3p1_delta_0p001_1000000_EMCAHULVMN.svg](img/robust_n_56_alpha_3p1_delta_0p001_1000000_EMCAHULVMN.svg)
