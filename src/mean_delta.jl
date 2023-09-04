@@ -49,7 +49,9 @@ end
 struct Catoni{F} <: RobustMean
     σ::F
 end
+
 α_Catoni(δ, n, σ) = sqrt((2log(2 / δ)) / (n * (1 + (2log(2 / δ)) / (n - 2log(2 / δ))))) / σ
+
 """
    mean(A::AbstractArray, Estimator::Catoni, kwargs...)
 
@@ -62,10 +64,19 @@ function mean(A::AbstractArray, δ::Real, Estimator::Catoni, kwargs...)
     return mean(A, z; kwargs...)
 end
 
+function mean(A::AbstractArray, δ::Real, Estimator::Catoni{<:Nothing}, kwargs...)
+    n = length(A)
+    α = α_Catoni(δ, n, std(A))
+    z = Z_Estimator(α, ψ_Catoni)
+    return mean(A, z; kwargs...)
+end
+
 struct Huber{F} <: RobustMean
     σ::F
 end
+
 α_Huber(δ, n, σ) = sqrt(2log(4 / δ) / n) / σ #sqrt(2 * (log(2 / δ) - log(1 - exp(-n / 2) / δ)) / n) / σ
+
 """
    mean(A::AbstractArray, Estimator::Huber, kwargs...)
 
@@ -81,7 +92,7 @@ end
 """
     LeeVal(x, δ; α₀ = 0.0) 
 
-Reference: Optimal Sub-Gaussian Mean Estimation in R by Lee et Valiant 
+Reference: Optimal Sub-Gaussian Mean Estimation in ℝ by Lee et Valiant 
 """
 function LeeVal(x, δ; α₀=0.0)
     κ = MoM(x, ceil(Int, log(1 / δ)))
@@ -94,7 +105,7 @@ struct LeeValiant <: RobustMean end
 """
     mean(A::AbstractArray, Estimator::δLeeValiant; kwargs...)
 
-Reference: Optimal Sub-Gaussian Mean Estimation in R by Lee et Valiant 
+Reference: Optimal Sub-Gaussian Mean Estimation in ℝ by Lee et Valiant 
 """
 function mean(A::AbstractArray, δ::Real, Estimator::LeeValiant; kwargs...)
     return LeeVal(A, δ; kwargs...)
