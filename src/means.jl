@@ -41,6 +41,7 @@ end
 Compute the Trimmed Mean thresolding data smaller `α` or larger than `β`
 """
 TrimMean(x::AbstractArray, α, β) = mean(φ(x[i], α, β) for i in eachindex(x))
+
 function φ(x, α, β)
     if x < α
         return α

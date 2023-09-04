@@ -56,7 +56,7 @@ end
 Rα(y, x::AbstractArray, w::AbstractWeights, α, ψ::Function) = sum(w[i] * ψ(α * (x[i] - y)) for i in eachindex(x))
 
 """
-mean(A::AbstractArray, w::AbstractWeights, Estimator::Z_Estimator)
+    mean(A::AbstractArray, w::AbstractWeights, Estimator::Z_Estimator)
 
 A Z estimator given an influence function `x->ψ(x)` and a scaling parameter `α`.
 """
