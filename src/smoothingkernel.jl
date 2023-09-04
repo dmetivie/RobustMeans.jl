@@ -20,10 +20,6 @@ cosine(u::Real) = abs(u) > 1 ? 0 : (pi / 4) * cos((pi / 2) * u)
 logistic(u::Real) = abs(u) > 1 ? 0 : 1 / (exp(u) + 2 + exp(-u))
 ```
 
-```math
-Y(x) = \\sum_{x_i \\in X} \\left( y_i f((x-x_i)/h) \\right) / \\sum_{x_i \in X} \\left( f((x-x_i)/h) \\right)
-```
-
 """
 struct SmoothingKernel
     f::Function
