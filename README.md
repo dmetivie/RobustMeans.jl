@@ -3,7 +3,7 @@
 This package aim is to implement in Julia some (one-dimensional for now) robust mean estimators.
 See [Mean Estimation and Regression Under Heavy-Tailed Distributions: A Survey](https://arxiv.org/pdf/1906.04280.pdf) for a recent but but not up to date since the field is very active) survey.
 
-**I am currently trying some stuff on the package**
+**I am currently trying some stuff on the package about "robust moving average"**
 
 ## What is it about?
 
