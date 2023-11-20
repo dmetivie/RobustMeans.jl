@@ -91,11 +91,11 @@ end
 
 Catoni's influence function
 """
-ψ_Catoni(x) = x < 0 ? -log(1 - x + x^2 / 2) : log(1 + x + x^2 / 2)
+ψ_Catoni(x) = x < zero(x) ? -log(1 - x + x^2 / 2) : log(1 + x + x^2 / 2)
 
 """
     ψ_Huber(x)
 
 ψ_Huber's influence function
 """
-ψ_Huber(x) = abs(x) ≤ 1 ? x : sign(x)
+ψ_Huber(x) = abs(x) ≤ one(x) ? x : sign(x)

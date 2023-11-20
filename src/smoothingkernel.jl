@@ -9,37 +9,39 @@ abstract type AbstractSmoothingKernel end
 Exemple of kernels are (but you can define your own)
 
 ```julia
-uniform(u::Real) = abs(u) > 1 ? 0 : 1 / 2
-epanechnikov(u::Real) = abs(u) > 1 ? 0 : 3 / 4 * (1 - u^2)
-gaussian(u::Real) = abs(u) > 1 ? 0 : (1 / sqrt(2 * pi)) * exp(-1 / 2 * u^2)
-triangular(u::Real) = abs(u) > 1 ? 0 : (1 - abs(u))
-biweight(u::Real) = abs(u) > 1 ? 0 : 15 / 16 * (1 - u^2)^2
-triweight(u::Real) = abs(u) > 1 ? 0 : 35 / 32 * (1 - u^2)^3
-tricube(u::Real) = abs(u) > 1 ? 0 : 70 / 81 * (1 - abs(u)^3)^3
-cosine(u::Real) = abs(u) > 1 ? 0 : (pi / 4) * cos((pi / 2) * u)
-logistic(u::Real) = abs(u) > 1 ? 0 : 1 / (exp(u) + 2 + exp(-u))
+uniform(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 1 / 2
+epanechnikov(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 3 / 4 * (1 - u^2)
+gaussian(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : (1 / sqrt(2 * pi)) * exp(-1 / 2 * u^2)
+triangular(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : (1 - abs(u))
+biweight(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 15 / 16 * (1 - u^2)^2
+triweight(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 35 / 32 * (1 - u^2)^3
+tricube(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 70 / 81 * (1 - abs(u)^3)^3
+cosine(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : (pi / 4) * cos((pi / 2) * u)
+logistic(u::T) where T<:Real = abs(u) > one(T) ? zero(T) : 1 / (exp(u) + 2 + exp(-u))
 ```
 
 """
-struct SmoothingKernel
+struct SmoothingKernel{T<:Real}
     f::Function
-    h::Real
+    h::T
 end
 
-uniform(u::Real) = abs(u) > 1 ? 0 : 1 / 2
+#NOTE: previously type unstable version lead to horrible performances! Hope this one is better
 
-triangular(u::Real) = abs(u) > 1 ? 0 : (1 - abs(u))
+uniform(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 1 / 2
 
-gaussian(u::Real) = abs(u) > 1 ? 0 : (1 / sqrt(2 * pi)) * exp(-1 / 2 * u^2)
+triangular(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : (1 - abs(u))
 
-epanechnikov(u::Real) = abs(u) > 1 ? 0 : 3 / 4 * (1 - u^2)
+gaussian(u::T) where {T<:Real} = (1 / sqrt(2 * pi)) * exp(-1 / 2 * u^2)
 
-biweight(u::Real) = abs(u) > 1 ? 0 : 15 / 16 * (1 - u^2)^2
+epanechnikov(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 3 / 4 * (1 - u^2)
 
-triweight(u::Real) = abs(u) > 1 ? 0 : 35 / 32 * (1 - u^2)^3
+biweight(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 15 / 16 * (1 - u^2)^2
 
-tricube(u::Real) = abs(u) > 1 ? 0 : 70 / 81 * (1 - abs(u)^3)^3
+triweight(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 35 / 32 * (1 - u^2)^3
 
-cosine(u::Real) = abs(u) > 1 ? 0 : (pi / 4) * cos((pi / 2) * u)
+tricube(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 70 / 81 * (1 - abs(u)^3)^3
 
-logistic(u::Real) = abs(u) > 1 ? 0 : 1 / (exp(u) + 2 + exp(-u))
+cosine(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : (pi / 4) * cos((pi / 2) * u)
+
+logistic(u::T) where {T<:Real} = abs(u) > one(T) ? zero(T) : 1 / (exp(u) + 2 + exp(-u))

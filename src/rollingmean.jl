@@ -9,7 +9,7 @@ function mean(y::AbstractVector, x::AbstractVector, kernel::SmoothingKernel, arg
     m = similar(y)
 
     for (i, xx) in enumerate(x)
-        w[:] = kernel.f.((x .- xx) / kernel.h)
+        @views w[:] .= kernel.f.((x .- xx) / kernel.h)
         m[i] = mean(y, weights(w), args...)
     end
     return m
