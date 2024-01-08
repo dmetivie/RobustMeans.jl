@@ -7,7 +7,7 @@ module RobustMeans
 
 using Statistics
 using StatsBase
-using Roots
+using NonlinearSolve
 
 import Statistics: mean
 
