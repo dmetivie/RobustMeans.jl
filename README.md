@@ -1,7 +1,7 @@
 # RobustMeans
 
-This package aim is to implement in Julia some (one-dimensional for now) robust mean estimators.
-See [Mean Estimation and Regression Under Heavy-Tailed Distributions: A Survey](https://arxiv.org/pdf/1906.04280.pdf) for a recent but but not up to date since the field is very active) survey.
+This package aim is to implement in Julia some robust mean estimators (one-dimensional for now).
+See [Mean Estimation and Regression Under Heavy-Tailed Distributions: A Survey](https://arxiv.org/pdf/1906.04280.pdf) or [The Robust Randomized Quasi Monte Carlo method, applications to integrating singular functions](https://cnrs.hal.science/CMAP/hal-03631879v3) for recent surveys.
 
 **I am currently trying some stuff on the package about "robust moving average"**
 
@@ -41,16 +41,15 @@ short_names = ["EM", "CA", "HU", "LV", "MN"]
 estimates = Dict{MeanEstimator,Vector}()
 for estimator in estimators
     estimates[estimator] = [mean(r, δ, estimator) for r in eachrow(x)]
-    end
+end
 ```
 
 ### Plot
 
 ```julia
-# To have nice LaTeX font plots.
 using StatsPlots, LaTeXStrings
 gr()
-plot_font = "Computer Modern"
+plot_font = "Computer Modern" # To have nice LaTeX font plots.
 default(
     fontfamily = plot_font,
     linewidth = 2,
