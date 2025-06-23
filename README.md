@@ -91,7 +91,8 @@ To perform robust regression, one could use
 u^\ast_{\mathrm{robust}} = \argmin_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
 ```
 
-Note that when $f$ is linear, you can use the dedicated package [RobustModels.jl](https://github.com/getzze/RobustModels.jl), which has many more robust estimators (but lacks some of the more theoretical ones written here and only applies to linear models).
+> [!NOTE]
+> Note that when $f$ is linear, you can use the dedicated package [RobustModels.jl](https://github.com/getzze/RobustModels.jl), which has many more robust estimators and a better interface. However, it does lack some of the more theoretical ones written here and most importantly it is currently limited to linear models.
 
 In the following example, we use the Minsker-Ndaoud robust estimator and $f$ is a $\mathrm{relu}$ function. 
 We choose Minsker-Ndaoud because it is compatible with automatic differentiation. Note that Catoni/Huber should also be easily differentiable; for the MoM-based estimator, I am not sure...
