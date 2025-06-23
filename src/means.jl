@@ -11,11 +11,11 @@ end
 """
 MedianOfMean(x::AbstractArray, k::Integer)
 
-Compute the Median of Mean with `k` groups (it does not permute the samples)
+Compute the Median of Mean with `k` groups of equal size (it does not permute the samples)
+Leftover samples are ignored.
 """
 function MoM(x::AbstractArray, k::Integer)
     n = length(x)
-    @assert n % k == 0 "Check that n=$n is a mutliple of k=$k"
     m = n ÷ k
     return median(mean(@view(x[(1+(l-1)*m):(l*m)])) for l = 1:k)
 end

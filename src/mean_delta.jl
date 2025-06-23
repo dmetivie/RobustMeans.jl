@@ -12,8 +12,14 @@ k_mom(δ) = ceil(Int, 8log(1 / δ))
     mean(A::AbstractArray, Estimator::MoM)
 
 """
-function mean(A::AbstractArray, δ::Real, Estimator::MedianOfMean)
+function mean(A::AbstractArray, δ::Real, Estimator::MedianOfMean; check_multiple = false)
     k = k_mom(δ)
+    if check_multiple
+        n = length(A)
+        if n % k != 0
+            @warn "Check that n=$(n) is a mutliple of k=$k"
+        end
+    end
     return mean(A, MedianOfMean(k))
 end
 
@@ -92,7 +98,7 @@ end
 """
     LeeVal(x, δ; α₀ = 0.0) 
 
-Reference: Optimal Sub-Gaussian Mean Estimation in ℝ by Lee et Valiant 
+Reference: *Optimal Sub-Gaussian Mean Estimation in ℝ* by Lee and Valiant 
 """
 function LeeVal(x, δ; α₀=0.0)
     κ = MoM(x, ceil(Int, log(1 / δ)))
@@ -105,36 +111,56 @@ struct LeeValiant <: RobustMean end
 """
     mean(A::AbstractArray, Estimator::δLeeValiant; kwargs...)
 
-Reference: Optimal Sub-Gaussian Mean Estimation in ℝ by Lee et Valiant 
+Reference: *Optimal Sub-Gaussian Mean Estimation in ℝ* by Lee and Valiant 
 """
-function mean(A::AbstractArray, δ::Real, Estimator::LeeValiant; kwargs...)
+function mean(A::AbstractArray, δ::Real, Estimator::LeeValiant; check_multiple = false, kwargs...)
+    k = ceil(Int, log(1 / δ))
+    if check_multiple
+        n = length(A)
+        if n % k != 0
+            @warn "Check that n=$(n) is a mutliple of k=$k"
+        end
+    end
     return LeeVal(A, δ; kwargs...)
 end
 
 """
-    MinskerNdaoud(x, k, p)
+    MinNda(x, k::Integer, p)
 
-Reference: Robust and efficient mean estimation: an approach based on the properties of self-normalized sums
+Compute the Median of Minsker-Ndaoud robust mean with `k` groups of equal size (it does not permute the samples)
+Leftover samples are ignored.
+Reference: *Robust and efficient mean estimation: an approach based on the properties of self-normalized sums* by Minsker Ndaoud
 """
-function MinNda(x, k, p)
+function MinNda(x, k::Integer, p)
     n = length(x)
-    @assert n % k == 0 "Check that n=$n is a mutliple of k=$k"
     m = n ÷ k
     μ̄ = [mean(@view(x[(1+(l-1)*m):(l*m)])) for l in 1:k]
     σ̂p = [stdm(@view(x[(1+(l-1)*m):(l*m)]), μ̄[l], corrected=false) for l in 1:k] .^ p
     return mean(μ̄ ./ σ̂p) * harmmean(σ̂p)
 end
+
 k_mn(δ) = ceil(Int, -log(δ / 3))
 struct MinskerNdaoud{T} <: RobustMean
     p::T
 end
 
 """
-    mean(A::AbstractArray, Estimator::δMinskerNdaoud; kwargs...)
+    mean(A::AbstractArray, δ::Real, Estimator::MinskerNdaoud; check_multiple = false, kwargs...)
+
+Compute the Median of Minsker Ndaoud robust mean with `k = ceil(Int, -log(δ / 3))` groups of equal size (it does not permute the samples).
+Leftover samples are ignored.
+
+`check_multiple`: Return an warning if the length of `A` is not a multiple of `k`
 
 Reference: Robust and efficient mean estimation: an approach based on the properties of self-normalized sums
 """
-function mean(A::AbstractArray, δ::Real, Estimator::MinskerNdaoud; kwargs...)
+function mean(A::AbstractArray, δ::Real, Estimator::MinskerNdaoud; check_multiple = false, kwargs...)
     k = k_mn(δ)
+    if check_multiple
+        n = length(A)
+        if n % k != 0
+            @warn "Check that n=$(n) is a mutliple of k=$k"
+        end
+    end
     return MinNda(A, k, Estimator.p; kwargs...)
 end
