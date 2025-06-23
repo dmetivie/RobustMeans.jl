@@ -83,12 +83,12 @@ The function is parametrized by the vector $u$ of parameters you want to adjust.
 
 Traditionally, one would try to solve the following optimization problem
 ```math
-u^\ast_{\mathrm{EM}} = \argmin_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2
+u^\ast_{\mathrm{EM}} = \operatorname{\argmin}_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2
 ```
 However, this empirical mean could be heavily influenced by data outliers.
 To perform robust regression, one could use
 ```math
-u^\ast_{\mathrm{robust}} = \argmin_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
+u^\ast_{\mathrm{robust}} = \operatorname{\argmin}_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
 ```
 
 > [!NOTE]
