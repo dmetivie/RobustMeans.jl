@@ -3,13 +3,11 @@
 The aim of this package is to implement in Julia some robust mean estimators (one-dimensional for now).
 See [Mean Estimation and Regression Under Heavy-Tailed Distributions: A Survey](https://arxiv.org/pdf/1906.04280.pdf) or [The Robust Randomized Quasi Monte Carlo method, applications to integrating singular functions](https://cnrs.hal.science/CMAP/hal-03631879v3) for recent surveys.
 
+> [!NOTE]
+> Computing the empirical mean over a data set is one of the most common operations in data analysis. However, this operation is not robust to outliers or contaminated samples.
+> Robust mean estimators are mean estimators that are ``robust`` (in some sense) against such outliers or contaminated samples.
+
 **I am currently trying some stuff on the package about "robust moving average"**
-
-## What is it about?
-
-Computing the empirical mean over a data set is one of the most common operations in data analysis.
-However, this operation is not robust to outliers or contaminated samples.
-Robust mean estimators are mean estimators that are ``robust`` (in some sense) against such outliers or contaminated samples.
 
 ## Example: Comparing robust estimator vs Empirical Means
 
@@ -84,10 +82,14 @@ Let's say you have a nonlinear regression problem $Y = f(u, X) + \epsilon$, wher
 The function is parametrized by the vector $u$ of parameters you want to adjust.
 
 Traditionally, one would try to solve the following optimization problem
-$$u^\ast_{\mathrm{EM}} = \argmin_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2$$
+```math
+u^\ast_{\mathrm{EM}} = \argmin_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2
+```
 However, this empirical mean could be heavily influenced by data outliers.
 To perform robust regression, one could use
-$$u^\ast_{\mathrm{robust}} = \argmin_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)$$
+```math
+u^\ast_{\mathrm{robust}} = \argmin_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
+```
 
 Note that when $f$ is linear, you can use the dedicated package [RobustModels.jl](https://github.com/getzze/RobustModels.jl), which has many more robust estimators (but lacks some of the more theoretical ones written here and only applies to linear models).
 
