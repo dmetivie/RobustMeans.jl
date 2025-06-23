@@ -42,7 +42,11 @@ for estimator in estimators
 end
 ```
 
-### Plot
+### Results
+
+<details close>
+
+<summary>Code for the plot</summary>
 
 ```julia
 using StatsPlots, LaTeXStrings
@@ -55,7 +59,9 @@ default(
     grid = true,
     framestyle = :default
 )
-# The plot 
+```
+
+```julia
 begin
     plot(thickness_scaling = 2, size = (1000, 600))
     plot!(Normal(), label = L"\mathcal{N}(0,1)", c = :black, alpha = 0.6)
@@ -68,11 +74,15 @@ begin
     vline!([0], label = :none, c = :black, lw = 1, alpha = 0.9)
     yaxis!(:log10, yminorticks = 9, minorgrid = :y, legend = :topright, minorgridlinewidth = 1.2)
     ylims!((1/M*10, 2))
-    ylabel!(L"\sqrt{n}(\hat{\mu}_n-\mu)/\sigma", tickfonthalign = :center)
+    xlabel!(L"\sqrt{n}(\hat{\mu}_n-\mu)/\sigma", tickfonthalign = :center)
+    ylabel!("PDF")
     xlims!((-5, 10))
+    ylims!((1e-5,2))
     yticks!(10.0 .^ (-7:-0))
 end
 ```
+
+</details>
 
 ![robust_n_56_alpha_3p1_delta_0p001_1000000_EMCAHULVMN.svg](img/robust_n_56_alpha_3p1_delta_0p001_1000000_EMCAHULVMN.svg)
 
@@ -82,19 +92,22 @@ Let's say you have a nonlinear regression problem $Y = f(u, X) + \epsilon$, wher
 The function is parametrized by the vector $u$ of parameters you want to adjust.
 
 Traditionally, one would try to solve the following optimization problem
+
 ```math
-u^\ast_{\mathrm{EM}} = \operatorname{\argmin}_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2
+u^\ast_{\mathrm{EM}} = \mathrm{\argmin}_u \dfrac{1}{N}\sum_{i=1}^N (y_i - f(u, x_i))^2
 ```
+
 However, this empirical mean could be heavily influenced by data outliers.
 To perform robust regression, one could use
+
 ```math
-u^\ast_{\mathrm{robust}} = \operatorname{\argmin}_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
+u^\ast_{\mathrm{robust}} = \mathrm{\argmin}_u \text{RobustMean}\left(\left\{(y_i - f(u, x_i))^2\right\}_{i\in [\![1, N]\!]}\right)
 ```
 
 > [!NOTE]
 > Note that when $f$ is linear, you can use the dedicated package [RobustModels.jl](https://github.com/getzze/RobustModels.jl), which has many more robust estimators and a better interface. However, it does lack some of the more theoretical ones written here and most importantly it is currently limited to linear models.
 
-In the following example, we use the Minsker-Ndaoud robust estimator and $f$ is a $\mathrm{relu}$ function. 
+In the following example, we use the Minsker-Ndaoud robust estimator and $f$ is a $\mathrm{relu}$ function.
 We choose Minsker-Ndaoud because it is compatible with automatic differentiation. Note that Catoni/Huber should also be easily differentiable; for the MoM-based estimator, I am not sure...
 
 First, here is the set up
@@ -155,4 +168,5 @@ plot!(Xl, relu.(Xl, a_true, b_true), label="True function", lw = 2, s = :dash, c
 plot!(Xl, relu.(Xl, sol_EM.u...), lw = 2, label = "Fit EM")
 plot!(Xl, relu.(Xl, sol_R.u...), lw = 2, label = "Fit Minsker-Ndaoud")
 ```
+
 ![Robust relu regression](img/robust_regression_relu.png)
